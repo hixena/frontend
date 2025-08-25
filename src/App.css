@@ -1,0 +1,223 @@
+
+
+
+.left {
+  width: 320px;
+  border-right: 2px solid white;
+  
+}
+
+
+.header {
+  width: 100%;
+  height: 130px;
+  
+  display: flex;
+}
+
+.right {
+  flex: 1;
+  
+}
+
+.header1 {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #4CAF50!important;
+  
+}
+.right_content {
+  margin-top: 20px;
+}
+.HEADER {
+background-color: #4CAF50!important;
+}
+.header2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: black;
+
+  letter-spacing: 1px;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+.hello {
+  position: relative;
+  left: 480px;
+  display: flex;
+  align-items: center;
+}
+
+
+.content {
+  display: flex;
+  height: calc(100vh - 100px);
+
+  
+}
+.CONTENT {
+
+background-color: white;
+position: relative;
+
+
+}
+.basic1 {
+  width: 320px;
+ padding: 20px ;
+ box-sizing: border-box;
+
+
+}
+.basic2 {
+  width: 320px;
+
+ box-sizing: border-box;
+
+  
+}
+
+.login {
+  width: 40px;
+  height: 40px;
+}
+.content1 {
+ 
+  height: 100%;
+  
+}
+
+.fuhao {
+
+  cursor: pointer;
+  color: black;
+  
+}
+
+
+.left_item1 {
+
+
+
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  font-size: 20px;
+ 
+  
+}
+.left_item2 {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  font-size: 20px;
+
+ 
+
+}
+
+
+
+.title_text {
+  margin-left: 10px;
+  color: black;
+
+}
+
+
+.sub_item1,.sub_item2,.sub_item3,.sub_item4 {
+
+  font-size: 18px;
+  cursor: pointer;
+  padding: 20px 40px;
+  box-sizing: border-box;
+  color: black;
+  white-space: nowrap;
+  
+
+  display: flex;        
+  align-items: center;    
+  justify-content: center; 
+  text-align: center;    
+  width: 100%;           
+  
+}
+.sub_item1:hover {
+  background-color: #F8F8F8;
+}
+
+.right_content_header {
+  display: flex;
+  justify-content: space-between;
+
+}
+
+/* .gap2 {
+  position: relative;
+  right: 30px;
+} */
+
+.ant-table {
+  margin-top: 20px;
+}
+
+.ant-table-thead > tr > th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+.ant-table-tbody > tr > td {
+  padding: 12px 16px;
+}
+
+
+.ant-btn-primary {
+  background-color: #4CAF50;
+  border-color: #4CAF50;
+}
+
+.ant-btn-primary:hover {
+  background-color: #388E3C;
+  border-color: #388E3C;
+}
+
+/* 模态框样式 */
+.ant-modal-header {
+  background-color: #f0f0f0;
+}
+
+.ant-modal-title {
+  font-weight: bold;
+}
+
+/* 表单样式 */
+.ant-form-item-label > label {
+  font-weight: bold;
+}
+
+
+
+.ant-modal-body {
+  max-height: 70vh;
+  overflow-y: auto; /* 模态框内容滚动 */
+}
+
+html {
+  overflow-y: scroll !important; 
+}
+
+.ant-modal-wrap {
+  overflow: auto;
+}
+
+.ant-modal-body {
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+}
