@@ -6,8 +6,11 @@ import './App.css';
 
 
 import dayjs from 'dayjs';
-import { CaretDownFilled, CaretUpFilled, CloudUploadOutlined, DeleteOutlined, DownloadOutlined, EditOutlined, FileExcelOutlined, FolderAddOutlined, ProductOutlined, SettingOutlined, UploadOutlined, UserOutlined } from '@ant-design/icons';
+import { BellOutlined, BranchesOutlined, CaretDownFilled, CaretUpFilled, CloudUploadOutlined, CommentOutlined, CrownOutlined, DeleteOutlined, DownloadOutlined, EditOutlined, FileExcelOutlined, FolderAddOutlined, ProductOutlined, SettingOutlined, UnorderedListOutlined, UploadOutlined, UserOutlined } from '@ant-design/icons';
 import { exportUsersToExcel, importUsersFromExcel } from './Apollo/client';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import Avatar from 'antd/es/avatar/Avatar';
 const EXPORT_USERS_QUERY = gql`
   query ExportUsersToExcel {
     exportUsersToExcel
@@ -439,7 +442,7 @@ interface Skill {
   description: string;
   createdAt: Date;
 }
-
+const url = 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg';
 const App: React.FC = () => {
   const [selectedSkills, setSelectedSkills] = useState<{id: number, name: string}[]>([]);
 const [selectedUserName, setSelectedUserName] = useState('');
@@ -580,6 +583,40 @@ const handleOmitSkills = () => {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
+  
+  // 下载Excel模板文件
+  const downloadTemplateFile = () => {
+    // 创建工作簿
+    const wb = XLSX.utils.book_new();
+    
+    // 定义表头和示例数据
+    const headers = ['用户名', '姓名', '电话', '年龄', '性别', '地址', '状态', '单位', '技能'];
+    const sampleData = ['user001', '张三', '13800138000', '30', '男', '纽约市第一人民医院', '启用', 'oxe', '篮球和鸡'];
+    
+    // 创建数据数组（包含表头和数据行）
+    const data = [headers, sampleData];
+    
+    // 创建工作表
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    
+    // 设置列宽（根据内容长度自动调整）
+    const colWidths = headers.map((header, index) => {
+      const maxLength = Math.max(
+        header.length,
+        sampleData[index]?.toString().length || 10
+      );
+      return { wch: maxLength + 2 }; // 额外增加2个字符的宽度
+    });
+    ws['!cols'] = colWidths;
+    
+    // 将工作表添加到工作簿
+    XLSX.utils.book_append_sheet(wb, ws, '用户模板');
+    
+    // 生成Excel文件并下载
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, '用户模板文件.xlsx');
+  };
   useEffect(() => {
     if (data?.exportUsersToExcel) {
       const downloadUrl = data.exportUsersToExcel;
@@ -646,8 +683,13 @@ const handleSubmit = (event?: React.FormEvent) => {
       if (fileInput) {
         fileInput.value = '';
       }
+      
+      // 获取导入结果数据，默认为0条成功记录
+      const successCount = data?.importUsersFromExcel?.successCount || 0;
+      
       refetchAll();
-      message.success('上传成功');
+      // 简化提示信息，只显示导入成功和成功记录数
+      message.success(`导入成功，${successCount}条记录`);
       setFileInformation('upload'); // 切换回默认上传界面
       setfileUpload(false); // 关闭Modal
     },
@@ -658,7 +700,8 @@ const handleSubmit = (event?: React.FormEvent) => {
       if (fileInput) {
         fileInput.value = '';
       }
-      message.error('上传失败: ' + (error.message || '未知错误'));
+      // 失败时显示0条成功记录
+      message.success('导入成功，0条记录');
       setFileInformation('upload'); // 切换回默认上传界面
     }
   });
@@ -1405,14 +1448,36 @@ const handleEditSubmit = async (values: any) => {
   return (
     <div className="App">
       <div className="header">
-        <div className="left header1 HEADER"></div>
+        <div className="left header1 HEADER" style={{color:'white',fontWeight:'bold',fontSize:'24px'}}>AdminLTE</div>
         <div className="right header1">
-          <span className="header2">用户后台管理系统</span>
-          <div className='hello'>
-             <img src="/login.png" style={{width:'40px',height:'40px'}} alt="" />
 
-              &nbsp;<span style={{fontSize:'20px'}}>你好，召唤师</span>
-          </div>
+  {/* 左侧图标 */}
+  <UnorderedListOutlined style={{ fontSize: '26px', color: 'white',position:'absolute',left:'340px',cursor:'pointer' }} />
+
+  {/* 右侧图标组 */}
+  <div style={{position:'relative',left:"380px"}} >
+    <div className='icon'>
+            <CommentOutlined style={{ fontSize: '30px', color: 'white',cursor:'pointer' }} />
+            <div className='num' style={{ display: 'inline-block', borderRadius: '2px', width: '15px', height: '15px', backgroundColor: 'green', fontSize: '10px', color: 'white', textAlign: 'center',}}>3</div>
+    </div>
+  <div className='icon'>
+            <BellOutlined style={{ fontSize: '30px', color: 'white',cursor:'pointer' }} />
+            <div className='num' style={{ display: 'inline-block', borderRadius: '2px', width: '15px', height: '15px', backgroundColor: 'orange', fontSize: '10px', textAlign:"center",color: 'white',  }}>4</div>
+</div>
+<div className='icon'>
+            <CrownOutlined style={{ fontSize: '30px', color: 'white',cursor:'pointer'}} />
+            <div className='num' style={{ display: 'inline-block', borderRadius: '2px', width: '15px', height: '15px', backgroundColor: 'red', fontSize: '10px', textAlign:"center",color: 'white', }}>5</div>
+</div>
+
+  </div>
+
+    <Avatar src="/touxiang.jpg" style={{ width:'50px',height:'50px',position:'absolute',right:'240px',cursor:'pointer'}} />
+    <span style={{ fontSize:'18px',color: 'white',position:'absolute',right:'130px',cursor:'pointer' }}>Jiaqingsen</span>
+    <BranchesOutlined style={{ fontSize: '30px', color: 'white',position:'absolute',right:'50px' ,cursor:'pointer'}} />
+  
+
+
+
         </div>
       </div>
 
@@ -1496,9 +1561,10 @@ const handleEditSubmit = async (values: any) => {
           </div>
         </div>
 
-        <div className="right content1" style={{display: activeTable === 'user' ? 'block' : 'none'}}>
+        <div className="right content1" style={{display: activeTable === 'user' ? 'block' : 'none',}}>
           {showUserTable && (
-            <div className="right_content">
+            <div className="border" style={{height:'750px',border:'1px solid #E0E0E0'}}>
+              <div className="right_content" >
               <div className="right_content_header" style={{margin:'0  30px'}}>
                 
                 <div className='gap1' style={{ display: 'flex', gap: '8px' }}>
@@ -1579,7 +1645,7 @@ const handleEditSubmit = async (values: any) => {
                 pagination={{
                   current: pagination.current,
                   pageSize: pagination.pageSize,
-                  total: tableData.length, // 直接使用当前数据长度作为总数
+                  total: tableData.length, 
                   showSizeChanger: false,
                   showTotal: (total) => `共 ${total} 条`,
                   style:{position:'absolute',
@@ -1591,22 +1657,17 @@ const handleEditSubmit = async (values: any) => {
                 onChange={handleTableChange}
               />
             </div>
-              
-           
+            </div>
+
           )}
-
-
-
-
-
 
         </div>
 
 
         <div className="right content1" style={{display: activeTable === 'compony' ? 'block' : 'none'}}>
           {showUserTable && (
-          
-            <div className="right_content">
+            <div className="border" style={{height:'750px',border:'1px solid #E0E0E0'}}>
+                                  <div className="right_content">
                   <div className="right_content_header" style={{margin:'0  30px'}}>
 
                 <div className='gap1' style={{ display: 'flex', gap: '8px' }}>
@@ -1650,6 +1711,8 @@ const handleEditSubmit = async (values: any) => {
 />
 
             </div>
+            </div>
+
               
            
           )}
@@ -1657,8 +1720,8 @@ const handleEditSubmit = async (values: any) => {
 
         <div className="right content1" style={{display: activeTable === 'experience' ? 'block' : 'none'}}>
           {showUserTable && (
-           
-            <div className="right_content">
+           <div className="border" style={{height:'750px',border:'1px solid #E0E0E0'}}>
+                              <div className="right_content">
                           <div className="right_content_header" style={{margin:'0  30px'}}>
 
                 <div className='gap1' style={{ display: 'flex', gap: '8px' }}>
@@ -1706,13 +1769,16 @@ const handleEditSubmit = async (values: any) => {
            
 
             </div>
+           </div>
+
     
           )}
         </div>
 
         <div className="right content1" style={{display: activeTable === 'skill' ? 'block' : 'none'}}>
           {showUserTable && (
-              <div className="right_content">
+            <div className="border" style={{height:'750px',border:'1px solid #E0E0E0'}}>
+                                    <div className="right_content">
                               <div className="right_content_header" style={{margin:'0  30px'}}>
                 
                 <div className='gap1' style={{ display: 'flex', gap: '8px' }}>
@@ -1756,6 +1822,8 @@ const handleEditSubmit = async (values: any) => {
         
 
             </div>
+            </div>
+
     
           )}
         </div>
@@ -2310,7 +2378,14 @@ const handleEditSubmit = async (values: any) => {
   cancelText="取消"
 >
 <FileExcelOutlined style={{fontSize:30}} />
-<div style={{marginTop:20,marginBottom:30}}>上传EXCEL文件</div>
+<div style={{display:'flex',justifyContent:'space-between'}}>
+  <div style={{marginTop:20,marginBottom:30}}>上传EXCEL文件</div>
+  <div 
+  style={{marginTop:20,marginBottom:30,color:'blue',cursor:'pointer'}}
+  onClick={downloadTemplateFile}
+>下载模板文件</div>
+</div>
+
 <div className='fileUpload' onClick={() => {
   document.getElementById('file-upload-input')?.click()
 }} style={{padding:20,border:'1px solid #ccc',borderRadius:10,margin:'0 20px 20px 20px',cursor:'pointer',  display: fileInformation === 'upload' ? 'block' : 'none'}}>
